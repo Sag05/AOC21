@@ -47,11 +47,11 @@ namespace day3part2
                 {
                     for (int i2 = 0; i2 < oxcal.Length; i2++)
                     {
-                        if (oxcal[i1] != null)
+                        if (!string.IsNullOrEmpty(oxcal[i2]))
                         {
-                            if (inArray[i1].input[1] != oxcal[i1][1])
+                            if (inArray[i1].input[i2] != oxcal[i2][1])
                             {
-                                inArray[i1].oActive = false;
+                                inArray[i2].oActive = false;
                             }
                             else
                             {
@@ -83,7 +83,7 @@ namespace day3part2
                         one++;
                     }
                 }
-                
+
                 if (zero > one)
                 {
                     oxcal[i] = "0";
@@ -105,15 +105,18 @@ namespace day3part2
 
                 for (int i1 = 0; i1 < inArray.Length; i1++)
                 {
-                    for (int i2 = 0; i2 < inArray.Length; i2++)
+                    for (int i2 = 0; i2 < o2cal.Length; i2++)
                     {
-                        if (inArray[i1].input[1] != oxcal[i1][1])
+                        if (!string.IsNullOrEmpty(o2cal[i2]))
                         {
-                            inArray[i1].o2Active = false;
-                        }
-                        else
-                        {
-                            currentlyActive++;
+                            if (inArray[i1].input[i2] != o2cal[i2][1])
+                            {
+                                inArray[i2].o2Active = false;
+                            }
+                            else
+                            {
+                                currentlyActive++;
+                            }
                         }
                     }
                 }
@@ -151,8 +154,8 @@ namespace day3part2
                 }
             }
             #endregion
-            
-            
+
+
             finalResult = oxresult * o2result;
             Console.WriteLine(finalResult);
             Console.Read();
