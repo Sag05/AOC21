@@ -9,11 +9,11 @@ namespace day3part2
 {
     class Program
     {
-
         struct inputArray
         {
-            public bool active;
             public string input;
+            public bool oActive;
+            public bool o2Active;
         }
 
         static void Main(string[] args)
@@ -25,39 +25,60 @@ namespace day3part2
             for (int i = 0; i < input.Length; i++)
             {
                 inArray[i].input = input[i];
+                inArray[i].oActive = true;
+                inArray[i].o2Active = true;
             }
 
-            string oxcal = " ";
-            string o2cal = " ";
+            string[] oxcal = new string[inArray[0].input.Length];
+            string[] o2cal = new string[inArray[0].input.Length];
             int oxresult = 0;
             int o2result = 0;
             int finalResult = 0;
 
+
+            #region Oxygen Calculation
             for (int i = 0; i < input[0].Length; i++)
             {
+                int currentlyActive = 0;
                 int one = 0;
                 int zero = 0;
 
                 for (int i1 = 0; i1 < inArray.Length; i1++)
                 {
-                    for (int i2 = 0; i2 < inArray.Length; i2++)
+                    for (int i2 = 0; i2 < oxcal.Length; i2++)
                     {
-                        if (inArray[i1].input[] == oxcal)
+                        if (oxcal[i1] != null)
                         {
-
+                            if (inArray[i1].input[1] != oxcal[i1][1])
+                            {
+                                inArray[i1].oActive = false;
+                            }
+                            else
+                            {
+                                currentlyActive++;
+                            }
                         }
                     }
                 }
 
-                for (int i1 = 0; i1 < input.Length; i1++)
+                if (currentlyActive == 1)
                 {
-                    
+                    for (int i1 = 0; i1 < inArray.Length; i1++)
+                    {
+                        if (inArray[i1].oActive)
+                        {
+                            oxresult = Convert.ToInt32(string.Join("", inArray[i1].input), 2);
+                        }
+                    }
+                }
 
-                    if (input[i1][i] == '0')
+                for (int i1 = 0; i1 < inArray.Length; i1++)
+                {
+                    if (inArray[i1].input[i] == '0' && inArray[i1].oActive)
                     {
                         zero++;
                     }
-                    else
+                    else if (inArray[i1].oActive)
                     {
                         one++;
                     }
@@ -65,18 +86,73 @@ namespace day3part2
                 
                 if (zero > one)
                 {
-                    oxcal += "0";
-                    o2cal += "1";
+                    oxcal[i] = "0";
                 }
                 else
                 {
-                    oxcal += "1";
-                    o2cal += "0";
+                    oxcal[i] = "1";
                 }
             }
+            #endregion
 
-            oxresult = Convert.ToInt32(oxcal, 2);
-            o2result = Convert.ToInt32(o2cal, 2);
+
+            #region O2 Scrubber Calculation
+            for (int i = 0; i < input[0].Length; i++)
+            {
+                int currentlyActive = 0;
+                int one = 0;
+                int zero = 0;
+
+                for (int i1 = 0; i1 < inArray.Length; i1++)
+                {
+                    for (int i2 = 0; i2 < inArray.Length; i2++)
+                    {
+                        if (inArray[i1].input[1] != oxcal[i1][1])
+                        {
+                            inArray[i1].o2Active = false;
+                        }
+                        else
+                        {
+                            currentlyActive++;
+                        }
+                    }
+                }
+
+                if (currentlyActive == 1)
+                {
+                    for (int i1 = 0; i1 < inArray.Length; i1++)
+                    {
+                        if (inArray[i1].o2Active)
+                        {
+                            o2result = Convert.ToInt32(string.Join("", inArray[i1].input), 2);
+                        }
+                    }
+                }
+
+                for (int i1 = 0; i1 < inArray.Length; i1++)
+                {
+                    if (inArray[i1].input[i] == '0' && inArray[i1].o2Active)
+                    {
+                        zero++;
+                    }
+                    else if (inArray[i1].o2Active)
+                    {
+                        one++;
+                    }
+                }
+
+                if (one > zero)
+                {
+                    oxcal[i] = "0";
+                }
+                else
+                {
+                    oxcal[i] = "1";
+                }
+            }
+            #endregion
+            
+            
             finalResult = oxresult * o2result;
             Console.WriteLine(finalResult);
             Console.Read();
