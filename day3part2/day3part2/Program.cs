@@ -22,44 +22,45 @@ namespace day3part2
             input = File.ReadLines("Input.txt").ToArray();
             inputArray[] inArray = new inputArray[input.Length];
 
-            for (int i = 0; i < input.Length; i++)
+            for (int i1 = 0; i1 < input.Length; i1++)
             {
-                inArray[i].input = input[i];
-                inArray[i].oActive = true;
-                inArray[i].o2Active = true;
+                inArray[i1].input = input[i1];
+                inArray[i1].oActive = true;
+                inArray[i1].o2Active = true;
             }
 
             string[] oxcal = new string[inArray[0].input.Length];
             string[] o2cal = new string[inArray[0].input.Length];
             int oxresult = 0;
+            int oxDecResult = 0;
             int o2result = 0;
+            int o2DecResult = 0;
             int finalResult = 0;
-
+            int i = 0;
 
             #region Oxygen Calculation
-            for (int i = 0; i < input[0].Length; i++)
+            while (i < inArray[0].input.Length)
             {
                 int currentlyActive = 0;
                 int one = 0;
                 int zero = 0;
 
-                for (int i1 = 0; i1 < inArray.Length; i1++)
+
+                if (i != 0)
                 {
-                    for (int i2 = 0; i2 < oxcal.Length; i2++)
+                    for (int i1 = 0; i1 < inArray.Length; i1++)
                     {
-                        if (!string.IsNullOrEmpty(oxcal[i2]))
+                        if (inArray[i1].input[i-1] == oxcal[i - 1][0])
                         {
-                            if (inArray[i1].input[i2] != oxcal[i2][1])
-                            {
-                                inArray[i2].oActive = false;
-                            }
-                            else
-                            {
-                                currentlyActive++;
-                            }
+                            currentlyActive++;
+                        }
+                        else
+                        {
+                            inArray[i1].oActive = false;
                         }
                     }
                 }
+
 
                 if (currentlyActive == 1)
                 {
@@ -67,10 +68,12 @@ namespace day3part2
                     {
                         if (inArray[i1].oActive)
                         {
-                            oxresult = Convert.ToInt32(string.Join("", inArray[i1].input), 2);
+                            oxresult = i1;
+                            i = inArray[0].input.Length;
                         }
                     }
                 }
+
 
                 for (int i1 = 0; i1 < inArray.Length; i1++)
                 {
@@ -84,42 +87,42 @@ namespace day3part2
                     }
                 }
 
-                if (zero > one)
-                {
-                    oxcal[i] = "0";
-                }
-                else
+
+                if (one >= zero)
                 {
                     oxcal[i] = "1";
                 }
+                else
+                {
+                    oxcal[i] = "0";
+                }
+                i++; 
             }
             #endregion
 
-
-            #region O2 Scrubber Calculation
-            for (int i = 0; i < input[0].Length; i++)
+            #region O2Scrubber
+            while (i < inArray[0].input.Length)
             {
                 int currentlyActive = 0;
                 int one = 0;
                 int zero = 0;
 
-                for (int i1 = 0; i1 < inArray.Length; i1++)
+
+                if (i != 0)
                 {
-                    for (int i2 = 0; i2 < o2cal.Length; i2++)
+                    for (int i1 = 0; i1 < inArray.Length; i1++)
                     {
-                        if (!string.IsNullOrEmpty(o2cal[i2]))
+                        if (inArray[i1].input[i - 1] == o2cal[i - 1][0])
                         {
-                            if (inArray[i1].input[i2] != o2cal[i2][1])
-                            {
-                                inArray[i2].o2Active = false;
-                            }
-                            else
-                            {
-                                currentlyActive++;
-                            }
+                            currentlyActive++;
+                        }
+                        else
+                        {
+                            inArray[i1].o2Active = false;
                         }
                     }
                 }
+
 
                 if (currentlyActive == 1)
                 {
@@ -127,10 +130,12 @@ namespace day3part2
                     {
                         if (inArray[i1].o2Active)
                         {
-                            o2result = Convert.ToInt32(string.Join("", inArray[i1].input), 2);
+                            o2result = i1;
+                            i = inArray[0].input.Length;
                         }
                     }
                 }
+
 
                 for (int i1 = 0; i1 < inArray.Length; i1++)
                 {
@@ -144,19 +149,26 @@ namespace day3part2
                     }
                 }
 
-                if (one > zero)
+
+                if (zero >= one)
                 {
-                    oxcal[i] = "0";
+                    o2cal[i] = "1";
                 }
                 else
                 {
-                    oxcal[i] = "1";
+                    o2cal[i] = "0";
                 }
+                i++;
             }
             #endregion
 
 
-            finalResult = oxresult * o2result;
+            oxDecResult = Convert.ToInt32(inArray[oxresult].input, 2);
+            o2DecResult = Convert.ToInt32(inArray[o2result].input, 2);
+
+            finalResult =  oxDecResult * o2DecResult;
+            Console.WriteLine(oxDecResult);
+            Console.WriteLine(o2DecResult);
             Console.WriteLine(finalResult);
             Console.Read();
         }
