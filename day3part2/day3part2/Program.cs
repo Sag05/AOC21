@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 
 namespace day3part2
@@ -33,24 +34,35 @@ namespace day3part2
             string[] o2cal = new string[inArray[0].input.Length];
             int oxresult = 0;
             int oxDecResult = 0;
+            bool oxRunning = true;
+            int oxRun = 0;
             int o2result = 0;
             int o2DecResult = 0;
+            bool o2Running = true;
+            int o2Run = 0;
             int finalResult = 0;
-            int i = 0;
+            
 
             #region Oxygen Calculation
-            while (i < inArray[0].input.Length)
+            while (oxRunning)
             {
                 int currentlyActive = 0;
                 int one = 0;
                 int zero = 0;
 
+                //set number of active first run
+                if (oxRun == 0)
+                {
+                    currentlyActive = inArray.Length;
+                }
 
-                if (i != 0)
+
+                //Check ammount of active
+                if (oxRun != 0 && oxRun < inArray[0].input.Length)
                 {
                     for (int i1 = 0; i1 < inArray.Length; i1++)
                     {
-                        if (inArray[i1].input[i-1] == oxcal[i - 1][0])
+                        if (inArray[i1].input[oxRun - 1] == oxcal[oxRun - 1][0] && inArray[i1].oActive == true)
                         {
                             currentlyActive++;
                         }
@@ -61,58 +73,88 @@ namespace day3part2
                     }
                 }
 
-
-                if (currentlyActive == 1)
+                //check if only one still active
+                if (currentlyActive <= 2)
                 {
-                    for (int i1 = 0; i1 < inArray.Length; i1++)
+                    if (currentlyActive == 2)
                     {
-                        if (inArray[i1].oActive)
+                        for (int i1 = 0; i1 < inArray.Length; i1++)
                         {
-                            oxresult = i1;
-                            i = inArray[0].input.Length;
+                            if (inArray[i1].input[oxRun] == '1' && inArray[i1].oActive)
+                            {
+                                Console.WriteLine("Correct");
+                                oxresult = i1;
+                                oxRunning = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i1 = 0; i1 < inArray.Length; i1++)
+                        {
+                            if (inArray[i1].oActive)
+                            {
+                                Console.WriteLine("Correct");
+                                oxresult = i1;
+                                oxRunning = false;
+                            }
                         }
                     }
                 }
 
 
-                for (int i1 = 0; i1 < inArray.Length; i1++)
+                //one/zero most common in bit
+                if (oxRun < inArray[0].input.Length)
                 {
-                    if (inArray[i1].input[i] == '0' && inArray[i1].oActive)
+                    for (int i1 = 0; i1 < inArray.Length; i1++)
                     {
-                        zero++;
+                        if (inArray[i1].input[oxRun] == '0' && inArray[i1].oActive)
+                        {
+                            zero++;
+                        }
+                        else if (inArray[i1].oActive)
+                        {
+                            one++;
+                        }
                     }
-                    else if (inArray[i1].oActive)
-                    {
-                        one++;
-                    }
-                }
 
 
-                if (one >= zero)
-                {
-                    oxcal[i] = "1";
+                    if (one >= zero)
+                    {
+                        oxcal[oxRun] = "1";
+                    }
+                    else
+                    {
+                        oxcal[oxRun] = "0";
+                    }
                 }
-                else
-                {
-                    oxcal[i] = "0";
-                }
-                i++; 
+                Console.WriteLine(currentlyActive);
+                //Thread.Sleep(1000);
+                oxRun++; 
             }
             #endregion
 
             #region O2Scrubber
-            while (i < inArray[0].input.Length)
+            while (o2Running)
             {
                 int currentlyActive = 0;
                 int one = 0;
                 int zero = 0;
 
-
-                if (i != 0)
+                //set number of active first run
+                if (o2Run == 0)
                 {
+                    currentlyActive = inArray.Length;
+                }
+
+
+                //Check ammount of active
+                if (o2Run != 0 && o2Run < inArray[0].input.Length)
+                {
+                    Console.WriteLine("debug");
                     for (int i1 = 0; i1 < inArray.Length; i1++)
                     {
-                        if (inArray[i1].input[i - 1] == o2cal[i - 1][0])
+                        if (inArray[i1].input[o2Run - 1] == o2cal[o2Run - 1][0] && inArray[i1].o2Active == true)
                         {
                             currentlyActive++;
                         }
@@ -123,42 +165,67 @@ namespace day3part2
                     }
                 }
 
-
-                if (currentlyActive == 1)
+                //check if only one still active
+                if (currentlyActive <= 2)
                 {
-                    for (int i1 = 0; i1 < inArray.Length; i1++)
+                    if (currentlyActive == 2)
                     {
-                        if (inArray[i1].o2Active)
+                        for (int i1 = 0; i1 < inArray.Length; i1++)
                         {
-                            o2result = i1;
-                            i = inArray[0].input.Length;
+                            if (inArray[i1].input[o2Run] == '0' && inArray[i1].o2Active)
+                            {
+                                Console.WriteLine("Correct");
+                                o2result = i1;
+                                o2Running = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i1 = 0; i1 < inArray.Length; i1++)
+                        {
+                            if (inArray[i1].o2Active)
+                            {
+                                Console.WriteLine("Correct");
+                                o2result = i1;
+                                o2Running = false;
+                            }
                         }
                     }
                 }
 
 
-                for (int i1 = 0; i1 < inArray.Length; i1++)
+                //one/zero most common in bit
+                if (o2Run < inArray[0].input.Length)
                 {
-                    if (inArray[i1].input[i] == '0' && inArray[i1].o2Active)
+                    for (int i1 = 0; i1 < inArray.Length; i1++)
                     {
-                        zero++;
+                        if (inArray[i1].input[o2Run] == '0' && inArray[i1].o2Active)
+                        {
+                            zero++;
+                        }
+                        else if (inArray[i1].o2Active)
+                        {
+                            one++;
+                        }
                     }
-                    else if (inArray[i1].o2Active)
+
+                    if (zero == one)
                     {
-                        one++;
+                        o2cal[o2Run] = "0";
+                    }
+                    if (zero > one)
+                    {
+                        o2cal[o2Run] = "1";
+                    }
+                    else
+                    {
+                        o2cal[o2Run] = "0";
                     }
                 }
-
-
-                if (zero >= one)
-                {
-                    o2cal[i] = "1";
-                }
-                else
-                {
-                    o2cal[i] = "0";
-                }
-                i++;
+                Console.WriteLine(currentlyActive);
+                //Thread.Sleep(1000);
+                o2Run++;
             }
             #endregion
 
